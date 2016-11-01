@@ -3,35 +3,37 @@ using System.Collections;
 
 public class Player : MonoBehaviour {
 
-	private Vector3 accel, vel;
-	public float friction = 0.1f;
+	private GameObject cam;
+	private bool canAccel = true;
+	private Vector2 accel;
+	public float friction = 10f;
 
-	public Vector3 Accel{
+	public Vector2 Accel{
 		get{ return accel; }
 		set{ accel = value; }
 	}
 
-	public Vector3 Vel{
-		get{ return vel; }
-		set{ vel = value; }
-	}
-
-	// Use this for initialization
-	void Start () {
-		accel = new Vector3 ();
-		vel = new Vector3 ();
+	void Start(){
+		cam = GameObject.FindGameObjectWithTag ("MainCamera");
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		if (Input.GetKeyDown (KeyCode.Space)) {
-			accel += Vector3.right * Time.deltaTime * 1000;
+		//Player input
+		if (canAccel && Input.GetKeyDown (KeyCode.Space)) {
+			accel += Vector2.right * Time.deltaTime * 2000;
+			//canAccel = false;
 		}
-		if(vel.x > 0) vel.x -= friction;
-		if (vel.x < 0) vel.x += friction;
 
-		vel += accel;
-		GetComponent<Rigidbody2D> ().AddForce (vel);
-		accel = Vector3.zero;
+		GetComponent<Rigidbody2D>().velocity += accel;
+		accel = Vector2.zero;
+
+		//Update camera position
+		cam.transform.position = new Vector3(transform.position.x, transform.position.y, -35);
+	}
+
+	public void Reset(){
+		transform.position = Vector2.zero;
+		canAccel = true;
 	}
 }

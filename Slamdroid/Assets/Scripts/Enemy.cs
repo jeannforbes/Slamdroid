@@ -3,6 +3,8 @@ using System.Collections;
 
 public class Enemy : MonoBehaviour {
 
+	public float PassSpeed = 20f;
+
 	private GameObject Player;
 	private Player playerScript;
 
@@ -17,8 +19,13 @@ public class Enemy : MonoBehaviour {
 	
 	}
 	void OnTriggerStay2D(Collider2D other) {
-		if (other.CompareTag ("Player")) {
-			Player.GetComponent<Rigidbody2D>().AddForce(playerScript.Vel * -20);
+		if (other.gameObject == Player) {
+			if (other.attachedRigidbody.velocity.x >= PassSpeed)
+				Destroy (this.gameObject);
+			else {
+				other.attachedRigidbody.velocity = Vector2.zero;
+				playerScript.Reset();
+			}
 		}
 	}
 
