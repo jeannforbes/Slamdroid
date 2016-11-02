@@ -17,7 +17,10 @@ public class Obstacle : MonoBehaviour {
 
 	void OnCollisionEnter2D(Collision2D other) {
 		if (other.gameObject == Player) {
-			this.GetComponent<Collider2D>().enabled = false;
+            other.gameObject.GetComponent<Player>().Accel -= Vector2.right * Time.deltaTime * 1000;
+            this.gameObject.transform.Translate(new Vector2(20.0f * Time.deltaTime, 20.0f * Time.deltaTime));
+            this.gameObject.transform.Rotate(0,0,15.0f*Time.deltaTime);
+            this.GetComponent<Collider2D>().enabled = false;
 		}
 	}
 
