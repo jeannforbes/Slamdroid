@@ -15,6 +15,7 @@ public class Player : MonoBehaviour {
 
 	void Start(){
 		cam = GameObject.FindGameObjectWithTag ("MainCamera");
+		GetComponent<Rigidbody2D> ().freezeRotation = true;
 	}
 	
 	// Update is called once per frame
