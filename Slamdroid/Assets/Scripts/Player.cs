@@ -13,8 +13,8 @@ public class Player : MonoBehaviour {
     private float boostTimer = 0;
     private float boostFactor = 0;
     private const float MAX_ACCEL = 10000f;
-    public GameObject boostLine;
-    public GameObject boostBar;
+    private GameObject boostLine;
+	private GameObject boostBar;
 
     public Vector2 Accel{
 		get{ return accel; }
@@ -23,6 +23,8 @@ public class Player : MonoBehaviour {
 
 	void Start(){
 		cam = GameObject.FindGameObjectWithTag ("MainCamera");
+		boostBar = GameObject.FindGameObjectWithTag ("BoostBar");
+		boostLine = boostBar.transform.FindChild ("BoostLine").gameObject;
 		GetComponent<Rigidbody2D> ().freezeRotation = true;
 	}
 	
@@ -56,13 +58,13 @@ public class Player : MonoBehaviour {
         GetComponent<Rigidbody2D>().velocity += accel;
 		accel = Vector2.zero;
 
-        /*We need some way to deal with the player hitting 0 velocity.
-         * 
+        //We need some way to deal with the player hitting 0 velocity.
+
         if (!canAccel && GetComponent<Rigidbody2D>().velocity == Vector2.zero)
         {
             Reset();
         }
-        */
+
 
         //Update camera position
         cam.transform.position = new Vector3(transform.position.x, transform.position.y, -35);

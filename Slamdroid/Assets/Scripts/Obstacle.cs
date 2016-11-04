@@ -31,8 +31,9 @@ public class Obstacle : MonoBehaviour {
     //Handles the collision between the player and obstacle.
 	void OnCollisionEnter2D(Collision2D other) {
 		if (other.gameObject == Player) {
-            other.gameObject.GetComponent<Player>().Accel -= Vector2.right * Time.deltaTime * 1000;
+            other.gameObject.GetComponent<Rigidbody2D>().velocity *= 0.9f;
             this.GetComponent<Collider2D>().enabled = false;
+			this.GetComponent<Rigidbody2D>().Sleep();
             //this.gameObject.transform.Translate(new Vector2(100.0f * Time.deltaTime, 30.0f * Time.deltaTime));
             //this.gameObject.transform.Rotate(0,0,-500.0f*Time.deltaTime);
             recoilTime = 20.0f;
