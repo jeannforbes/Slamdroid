@@ -49,7 +49,7 @@ public class StateManager : MonoBehaviour {
         playerScript = player.GetComponent<Player>();
 
         changeState(GameState.MainMenu);
-        menuRect = new Rect(0.0f, 0.0f, 200f, 500f);
+        menuRect = new Rect(0.0f, 0.0f, 200f, Screen.height);
         labelRect = new Rect(padding, padding, menuRect.width-(2*padding), lineHeight);
         buttonRects = new Rect[maxButtons];
 
