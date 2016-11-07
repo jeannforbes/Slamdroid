@@ -2,14 +2,16 @@
 using System.Collections;
 
 public class Player : MonoBehaviour {
+    private int money;
 
-	private GameObject cam;
+    private GameObject cam;
     //private bool canAccel = true;
 
 	private Vector2 accel;
 	public float friction = 10f;
 
     //Starting boost
+    private float zOffset;
     private float boostTimer = 0;
     private float boostFactor = 0;
     private const float MAX_ACCEL = 10000f;
@@ -23,14 +25,30 @@ public class Player : MonoBehaviour {
     }
     private PlayerState playState;
 
+    //Gets and sets the acceleration vector.
     public Vector2 Accel{
 		get{ return accel; }
 		set{ accel = value; }
 	}
 
+    //Gets the player state.
     public PlayerState PlayState
     {
         get { return playState; }
+    }
+
+    //Gets and sets the money the player has.
+    //other classes can only decrement this value.
+    public int Money
+    {
+        get { return money; }
+        set
+        {
+            if(value < money)
+            {
+                money = value;
+            }
+        }
     }
 
 	void Start(){
@@ -40,6 +58,8 @@ public class Player : MonoBehaviour {
 		GetComponent<Rigidbody2D> ().freezeRotation = true;
 
         playState = PlayerState.Stopped;
+
+        zOffset = boostLine.transform.localPosition.z;
     }
 	
 	// Update is called once per frame
@@ -52,7 +72,7 @@ public class Player : MonoBehaviour {
                 boostFactor = -Mathf.Cos(boostTimer * 5);
 
                 Vector3 barPosition = 1.5f * Vector2.up * boostFactor;
-                barPosition.z = -0.3f;
+                barPosition.z = zOffset;
 
                 boostLine.transform.localPosition = barPosition;
 
