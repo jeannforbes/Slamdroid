@@ -49,10 +49,12 @@ public class StateManager : MonoBehaviour {
     private Rect[] buttonRects;
     private Rect instructionsRect;
     private Rect instructionButton;
+    private Rect cansRect;
 
     //Upgrades
     private UpgradeChoice[] upgrades;
     private int totalCost = 0;
+    private string upgradeStr;
 
 	// Use this for initialization
 	void Start () {
@@ -72,9 +74,11 @@ public class StateManager : MonoBehaviour {
         instructionsRect = new Rect(padding, padding, menuRect.width - (2 * padding), numInstructionLines * (padding + lineHeight) - padding);
         instructionButton = new Rect(padding, padding + ((numInstructionLines) * (padding + lineHeight)), menuRect.width - (2 * padding), lineHeight);
 
+        cansRect = new Rect(padding, Screen.height - (padding + lineHeight), menuRect.width - (2 * padding), lineHeight);
+
         upgrades = new UpgradeChoice[]{
-            new UpgradeChoice("Increased Boost", new effect(playerScript.increaseBoost), 30, 10, 4),
-            new UpgradeChoice("Slower Boost Bar", new effect(playerScript.decreaseBarSpeed),15,15,3)
+            new UpgradeChoice("Increased Boost", new effect(playerScript.increaseBoost), 2, 3, 6),
+            new UpgradeChoice("Slower Boost Bar", new effect(playerScript.decreaseBarSpeed), 3, 4, 3)
         };
     }
 	
@@ -152,30 +156,41 @@ public class StateManager : MonoBehaviour {
                 {
                     if (upgrades[i].maxUpgrades != 0 && upgrades[i].maxUpgrades < upgrades[i].numUpgrades)
                     {
-                        GUI.Label(buttonRects[i], ("(" + upgrades[i].name + ": fully upgraded)"));
+                        GUI.Label(buttonRects[i], (upgrades[i].name + " (" + upgrades[i].numUpgrades + "," + upgrades[i].maxUpgrades + ") - NA"));
                     }
                     else {
                         totalCost = upgrades[i].baseCost + (upgrades[i].numUpgrades * upgrades[i].costIncrement);
-                        if (playerScript.Money < totalCost)
+                        upgradeStr = (upgrades[i].name + " (" + upgrades[i].numUpgrades + "," + upgrades[i].maxUpgrades + ") - " + totalCost);
+                        if (playerScript.Cans < totalCost)
                         {
 
-                            GUI.Label(buttonRects[i], ("(" + upgrades[i].name + ": fully upgraded)"));
+                            GUI.Label(buttonRects[i], upgradeStr);
                         }
                         else
                         {
-                            if (GUI.Button(buttonRects[i], upgrades[i].name + " (" + upgrades[i].numUpgrades + "," + upgrades[i].maxUpgrades + ") - " + totalCost)) ;
+                            if (GUI.Button(buttonRects[i], upgradeStr))
                             {
-                                playerScript.Money -= totalCost;
+                                playerScript.Cans -= totalCost;
+                                upgrades[i].numUpgrades ++;
                                 upgrades[i].upgradeEffect();
                             }
                         }
                     }
                 }
+
                 if (GUI.Button(buttonRects[upgrades.Length], "Back"))
                 {
                     changeState(lastState);
                 }
                 break;
+        }
+
+        if(state == GameState.Play)
+        {
+            GUI.TextArea(cansRect, "Creature cans - " + playerScript.Cans);
+        }else
+        {
+            GUI.Label(cansRect, "Creature cans - " + playerScript.Cans);
         }
         GUI.EndGroup();
     }

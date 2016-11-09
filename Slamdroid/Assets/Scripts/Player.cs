@@ -2,7 +2,7 @@
 using System.Collections;
 
 public class Player : MonoBehaviour {
-    private int money;
+    private int cans;
 
     private GameObject cam;
     //private bool canAccel = true;
@@ -14,8 +14,8 @@ public class Player : MonoBehaviour {
     private float zOffset;
     private float boostTimer = 0;
     private float boostFactor = 0;
-    private float maxAccel = 10000f;
-    private float barSpeed = 5f;
+    private float maxAccel = 4000f;
+    private float barSpeed = 6f;
     private GameObject boostLine;
 	private GameObject boostBar;
     
@@ -38,16 +38,16 @@ public class Player : MonoBehaviour {
         get { return playState; }
     }
 
-    //Gets and sets the money the player has.
+    //Gets and sets the cans(money) the player has.
     //other classes can only decrement this value.
-    public int Money
+    public int Cans
     {
-        get { return money; }
+        get { return cans; }
         set
         {
-            if(value < money)
+            if(value >= 0)
             {
-                money = value;
+                cans = value;
             }
         }
     }
@@ -125,6 +125,7 @@ public class Player : MonoBehaviour {
     //Increases the rate at which a character is boosted at the start.
     public void increaseBoost()
     {
+        print("Speed boosted!");
         maxAccel += 2000;
     }
 

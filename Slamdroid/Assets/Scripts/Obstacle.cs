@@ -36,6 +36,7 @@ public class Obstacle : MonoBehaviour {
 			this.GetComponent<Rigidbody2D>().Sleep();
             //this.gameObject.transform.Translate(new Vector2(100.0f * Time.deltaTime, 30.0f * Time.deltaTime));
             //this.gameObject.transform.Rotate(0,0,-500.0f*Time.deltaTime);
+            Player.GetComponent<Player>().Cans++;
             recoilTime = 20.0f;
 		}
 	}

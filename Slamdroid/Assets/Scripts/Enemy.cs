@@ -20,12 +20,16 @@ public class Enemy : MonoBehaviour {
 	}
 	void OnTriggerStay2D(Collider2D other) {
 		if (other.gameObject == Player) {
-			if (other.attachedRigidbody.velocity.x >= PassSpeed)
-				Destroy (this.gameObject);
-			else {
-				other.attachedRigidbody.velocity = Vector2.zero;
-				playerScript.Reset();
-			}
+            if (other.attachedRigidbody.velocity.x >= PassSpeed)
+            {
+                playerScript.Cans += 3;
+                Destroy(this.gameObject);
+            }
+            else
+            {
+                other.attachedRigidbody.velocity = Vector2.zero;
+                playerScript.Reset();
+            }
 		}
 	}
 
