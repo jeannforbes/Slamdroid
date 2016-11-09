@@ -5,6 +5,16 @@ using System.Collections;
 public delegate void effect();
 struct UpgradeChoice
 {
+    public UpgradeChoice(string name, effect upgradeEffect,int baseCost,int costIncrement,int maxUpgrades)
+    {
+        this.name = name;
+        this.upgradeEffect = upgradeEffect;
+        this.baseCost = baseCost;
+        this.costIncrement = costIncrement;
+        this.numUpgrades = 0;
+        this.maxUpgrades = maxUpgrades;
+    }
+
     public string name;
     public effect upgradeEffect;
     public int baseCost;
@@ -20,7 +30,7 @@ public class StateManager : MonoBehaviour {
     }
 
     private GameObject player;
-    private Player playerScript;
+    private static Player playerScript;
 
     private GameState state;
     private GameState lastState;
@@ -31,6 +41,7 @@ public class StateManager : MonoBehaviour {
     private const int maxButtons = 3;
 
     private const float lineHeight = 20f;
+    private const float menuWidth = 300f;
     private const float padding = 5f;
 
     private Rect menuRect;
@@ -38,9 +49,9 @@ public class StateManager : MonoBehaviour {
     private Rect[] buttonRects;
     private Rect instructionsRect;
     private Rect instructionButton;
-    
+
     //Upgrades
-    private UpgradeChoice[] upgrades = new UpgradeChoice[0];
+    private UpgradeChoice[] upgrades;
     private int totalCost = 0;
 
 	// Use this for initialization
@@ -49,7 +60,7 @@ public class StateManager : MonoBehaviour {
         playerScript = player.GetComponent<Player>();
 
         changeState(GameState.MainMenu);
-        menuRect = new Rect(0.0f, 0.0f, 200f, Screen.height);
+        menuRect = new Rect(0.0f, 0.0f, menuWidth, Screen.height);
         labelRect = new Rect(padding, padding, menuRect.width-(2*padding), lineHeight);
         buttonRects = new Rect[maxButtons];
 
@@ -60,6 +71,11 @@ public class StateManager : MonoBehaviour {
 
         instructionsRect = new Rect(padding, padding, menuRect.width - (2 * padding), numInstructionLines * (padding + lineHeight) - padding);
         instructionButton = new Rect(padding, padding + ((numInstructionLines) * (padding + lineHeight)), menuRect.width - (2 * padding), lineHeight);
+
+        upgrades = new UpgradeChoice[]{
+            new UpgradeChoice("Increased Boost", new effect(playerScript.increaseBoost), 30, 10, 4),
+            new UpgradeChoice("Slower Boost Bar", new effect(playerScript.decreaseBarSpeed),15,15,3)
+        };
     }
 	
 	// Update is called once per frame
@@ -147,7 +163,7 @@ public class StateManager : MonoBehaviour {
                         }
                         else
                         {
-                            if (GUI.Button(buttonRects[i], upgrades[i].name))
+                            if (GUI.Button(buttonRects[i], upgrades[i].name + " (" + upgrades[i].numUpgrades + "," + upgrades[i].maxUpgrades + ") - " + totalCost)) ;
                             {
                                 playerScript.Money -= totalCost;
                                 upgrades[i].upgradeEffect();

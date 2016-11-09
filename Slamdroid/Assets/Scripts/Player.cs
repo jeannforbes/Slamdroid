@@ -14,7 +14,8 @@ public class Player : MonoBehaviour {
     private float zOffset;
     private float boostTimer = 0;
     private float boostFactor = 0;
-    private const float MAX_ACCEL = 10000f;
+    private float maxAccel = 10000f;
+    private float barSpeed = 5f;
     private GameObject boostLine;
 	private GameObject boostBar;
     
@@ -69,7 +70,7 @@ public class Player : MonoBehaviour {
         {
             case PlayerState.Ready:
                 boostTimer += Time.deltaTime;
-                boostFactor = -Mathf.Cos(boostTimer * 5);
+                boostFactor = -Mathf.Cos(boostTimer * barSpeed);
 
                 Vector3 barPosition = 1.5f * Vector2.up * boostFactor;
                 barPosition.z = zOffset;
@@ -78,7 +79,7 @@ public class Player : MonoBehaviour {
 
                 if (Input.GetKeyDown(KeyCode.Space))
                 {
-                    accel += Vector2.right * Time.deltaTime * MAX_ACCEL * (1 - Mathf.Abs(boostFactor));
+                    accel += Vector2.right * Time.deltaTime * maxAccel * (1 - Mathf.Abs(boostFactor));
                     //canAccel = false;
                     playState = PlayerState.Running;
 
@@ -119,5 +120,17 @@ public class Player : MonoBehaviour {
     void OnEnable()
     {
         playState = PlayerState.Ready;
+    }
+
+    //Increases the rate at which a character is boosted at the start.
+    public void increaseBoost()
+    {
+        maxAccel += 2000;
+    }
+
+    //Decreases the speed of the boost bar.
+    public void decreaseBarSpeed()
+    {
+        barSpeed -= 1;
     }
 }
