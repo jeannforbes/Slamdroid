@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 
 public delegate void effect();
@@ -56,8 +57,12 @@ public class StateManager : MonoBehaviour {
     private int totalCost = 0;
     private string upgradeStr;
 
-	// Use this for initialization
-	void Start () {
+    //Resetting
+    private List<GameObject> obstacleList;
+    private List<GameObject> enemyList;
+
+    // Use this for initialization
+    void Start () {
         player = GameObject.FindGameObjectWithTag("Player");
         playerScript = player.GetComponent<Player>();
 
@@ -78,8 +83,13 @@ public class StateManager : MonoBehaviour {
 
         upgrades = new UpgradeChoice[]{
             new UpgradeChoice("Increased Boost", new effect(playerScript.increaseBoost), 2, 3, 6),
-            new UpgradeChoice("Slower Boost Bar", new effect(playerScript.decreaseBarSpeed), 3, 4, 3)
+            new UpgradeChoice("Slower Boost Bar", new effect(playerScript.decreaseBarSpeed), 3, 4, 2)
         };
+
+        obstacleList = new List<GameObject>();
+        obstacleList.AddRange(GameObject.FindGameObjectsWithTag("Obstacle"));
+        enemyList = new List<GameObject>();
+        enemyList.AddRange(GameObject.FindGameObjectsWithTag("Enemy"));
     }
 	
 	// Update is called once per frame
@@ -207,5 +217,16 @@ public class StateManager : MonoBehaviour {
             playerScript.enabled = false;
         }
         state = newState;
+    }
+
+    //Resets level for a new run.
+    public void worldReset()
+    {
+        foreach(GameObject obstacle in obstacleList)
+        {
+            Obstacle obstacleScript = obstacle.GetComponent<Obstacle>();
+            obstacleScript.enabled = true;
+            obstacleScript.Reset();
+        }
     }
 }
