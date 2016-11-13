@@ -8,11 +8,15 @@ public class Enemy : MonoBehaviour {
 	private GameObject Player;
 	private Player playerScript;
 
-	// Use this for initialization
-	void Start () {
+    private Vector2 startLocation;
+
+    // Use this for initialization
+    void Start () {
 		Player = GameObject.FindGameObjectWithTag ("Player");
 		playerScript = Player.GetComponent ("Player") as Player;
-	}
+
+        startLocation = gameObject.transform.localPosition;
+    }
 	
 	// Update is called once per frame
 	void Update () {
@@ -22,8 +26,12 @@ public class Enemy : MonoBehaviour {
 		if (other.gameObject == Player) {
             if (other.attachedRigidbody.velocity.x >= PassSpeed)
             {
+                print("Enemy defeated.");
                 playerScript.Cans += 3;
-                Destroy(this.gameObject);
+                //Destroy(this.gameObject);
+                this.gameObject.GetComponent<SpriteRenderer>().enabled = false;
+                this.gameObject.GetComponent<BoxCollider2D>().enabled = false;
+                enabled = false;
             }
             else
             {
@@ -33,4 +41,11 @@ public class Enemy : MonoBehaviour {
 		}
 	}
 
+    //Resets enemy object for a new run.
+    public void Reset()
+    {
+        gameObject.transform.localPosition = startLocation;
+        gameObject.GetComponent<SpriteRenderer>().enabled = true;
+        this.gameObject.GetComponent<BoxCollider2D>().enabled = true;
+    }
 }

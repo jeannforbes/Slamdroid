@@ -14,10 +14,12 @@ public class Player : MonoBehaviour {
     private float zOffset;
     private float boostTimer = 0;
     private float boostFactor = 0;
-    private float maxAccel = 4000f;
+    private float maxAccel = 3000f;
     private float barSpeed = 6f;
     private GameObject boostLine;
 	private GameObject boostBar;
+
+    private GameObject gameManager;
     
     //player's state
     public enum PlayerState
@@ -61,6 +63,8 @@ public class Player : MonoBehaviour {
         playState = PlayerState.Stopped;
 
         zOffset = boostLine.transform.localPosition.z;
+
+        gameManager = GameObject.FindGameObjectWithTag("GameManager");
     }
 	
 	// Update is called once per frame
@@ -100,6 +104,7 @@ public class Player : MonoBehaviour {
                 break;
             case PlayerState.Stopped:
                 Reset();
+                gameManager.GetComponent<StateManager>().worldReset();
                 break;
         }
 
@@ -107,6 +112,7 @@ public class Player : MonoBehaviour {
         cam.transform.position = new Vector3(transform.position.x, transform.position.y, -35);
     }
 
+    //Resets player object for a new run.
 	public void Reset(){
 		transform.position = Vector2.zero;
         //canAccel = true;
@@ -126,12 +132,12 @@ public class Player : MonoBehaviour {
     public void increaseBoost()
     {
         print("Speed boosted!");
-        maxAccel += 2000;
+        maxAccel += 1500;
     }
 
     //Decreases the speed of the boost bar.
     public void decreaseBarSpeed()
     {
-        barSpeed -= 1;
+        barSpeed -= 1.5f;
     }
 }

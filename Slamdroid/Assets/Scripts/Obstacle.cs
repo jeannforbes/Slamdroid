@@ -6,9 +6,15 @@ public class Obstacle : MonoBehaviour {
 	private GameObject Player;
     private float recoilTime = 0;
 
+    private Vector2 startLocation;
+    private Quaternion startRotation;
+
 	// Use this for initialization
 	void Start () {
 		Player = GameObject.FindGameObjectWithTag ("Player");
+
+        startLocation = gameObject.transform.localPosition;
+        startRotation = gameObject.transform.localRotation;
 	}
 	
 	// Update is called once per frame
@@ -21,10 +27,16 @@ public class Obstacle : MonoBehaviour {
                 recoilTime -= Time.deltaTime;
                 this.gameObject.transform.Translate(new Vector2(8.0f * Time.deltaTime, 5.0f * Time.deltaTime));
             }
+            else
+            {
+                recoilTime = 0;
+            }
         }
         if (transform.position.y < -40)
         {
-            GameObject.Destroy(gameObject);
+            //GameObject.Destroy(gameObject);
+            this.gameObject.GetComponent<SpriteRenderer>().enabled = false;
+            this.enabled = false;
         }
 	}
 
@@ -41,5 +53,15 @@ public class Obstacle : MonoBehaviour {
 		}
 	}
 
+    //Resets obstacle object for a new run.
+    public void Reset()
+    {
+        gameObject.transform.localPosition = startLocation;
+        gameObject.transform.localRotation = startRotation;
 
+        gameObject.GetComponent<Collider2D>().enabled = true;
+        gameObject.GetComponent<SpriteRenderer>().enabled = true;
+        gameObject.GetComponent<Rigidbody2D>().WakeUp();
+        recoilTime = 0;
+    }
 }
