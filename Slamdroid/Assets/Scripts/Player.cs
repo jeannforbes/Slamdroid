@@ -114,7 +114,7 @@ public class Player : MonoBehaviour {
 
     //Resets player object for a new run.
 	public void Reset(){
-		transform.position = Vector2.zero;
+		transform.position = new Vector2 (0,0);
         //canAccel = true;
         playState = PlayerState.Ready;
         boostTimer = 0;

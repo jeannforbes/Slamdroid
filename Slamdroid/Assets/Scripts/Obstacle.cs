@@ -1,7 +1,12 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+[RequireComponent (typeof (Rigidbody2D))]
+[RequireComponent (typeof (BoxCollider2D))]
+
 public class Obstacle : MonoBehaviour {
+
+	public int currencyValue = 0;
 
 	private GameObject Player;
     private float recoilTime = 0;
@@ -48,7 +53,7 @@ public class Obstacle : MonoBehaviour {
 			this.GetComponent<Rigidbody2D>().Sleep();
             //this.gameObject.transform.Translate(new Vector2(100.0f * Time.deltaTime, 30.0f * Time.deltaTime));
             //this.gameObject.transform.Rotate(0,0,-500.0f*Time.deltaTime);
-            Player.GetComponent<Player>().Cans++;
+            Player.GetComponent<Player>().Cans += currencyValue;
             recoilTime = 20.0f;
 		}
 	}

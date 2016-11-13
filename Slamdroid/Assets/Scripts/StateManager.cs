@@ -200,7 +200,7 @@ public class StateManager : MonoBehaviour {
             GUI.TextArea(cansRect, "Creature cans - " + playerScript.Cans);
         }else
         {
-            GUI.Label(cansRect, "Creature cans - " + playerScript.Cans);
+            GUI.Label(cansRect, "Creature cans:  " + playerScript.Cans);
         }
         GUI.EndGroup();
     }
