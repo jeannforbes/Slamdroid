@@ -26,7 +26,7 @@ public class Obstacle : MonoBehaviour {
 	void Update () {
         if (!this.GetComponent<Collider2D>().enabled)
         {
-            this.gameObject.transform.Rotate(0, 0, -14.0f * Time.deltaTime);
+            //this.gameObject.transform.Rotate(0, 0, -14.0f * Time.deltaTime);
             if(recoilTime > 0)
             {
                 recoilTime -= Time.deltaTime;

@@ -164,9 +164,9 @@ public class StateManager : MonoBehaviour {
                 GUI.Label(labelRect, "Upgrades:");
                 for(int i = 0; i < upgrades.Length; i++)
                 {
-                    if (upgrades[i].maxUpgrades != 0 && upgrades[i].maxUpgrades < upgrades[i].numUpgrades)
+                    if (upgrades[i].maxUpgrades != 0 && upgrades[i].maxUpgrades <= upgrades[i].numUpgrades)
                     {
-                        GUI.Label(buttonRects[i], (upgrades[i].name + " (" + upgrades[i].numUpgrades + "," + upgrades[i].maxUpgrades + ") - NA"));
+                        GUI.Label(buttonRects[i], (upgrades[i].name + " (" + upgrades[i].numUpgrades + "," + upgrades[i].maxUpgrades + ") - N/A"));
                     }
                     else {
                         totalCost = upgrades[i].baseCost + (upgrades[i].numUpgrades * upgrades[i].costIncrement);
@@ -227,6 +227,13 @@ public class StateManager : MonoBehaviour {
             Obstacle obstacleScript = obstacle.GetComponent<Obstacle>();
             obstacleScript.enabled = true;
             obstacleScript.Reset();
+        }
+
+        foreach (GameObject enemy in enemyList)
+        {
+            Enemy enemyScript = enemy.GetComponent<Enemy>();
+            enemyScript.enabled = true;
+            enemyScript.Reset();
         }
     }
 }
