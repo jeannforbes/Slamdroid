@@ -3,6 +3,7 @@ using System.Collections;
 
 public class Player : MonoBehaviour {
     private int cans;
+    private Vector2 startPosition;
 
     private GameObject cam;
     //private bool canAccel = true;
@@ -65,6 +66,8 @@ public class Player : MonoBehaviour {
         zOffset = boostLine.transform.localPosition.z;
 
         gameManager = GameObject.FindGameObjectWithTag("GameManager");
+
+        startPosition = transform.localPosition;
     }
 	
 	// Update is called once per frame
@@ -114,7 +117,7 @@ public class Player : MonoBehaviour {
 
     //Resets player object for a new run.
 	public void Reset(){
-		transform.position = Vector2.zero;
+		transform.position = startPosition;
         //canAccel = true;
         playState = PlayerState.Ready;
         boostTimer = 0;
