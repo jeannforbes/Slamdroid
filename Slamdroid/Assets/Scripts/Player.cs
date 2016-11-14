@@ -121,6 +121,8 @@ public class Player : MonoBehaviour {
         playState = PlayerState.Ready;
         boostTimer = 0;
 
+		transform.position = Vector2.zero;
+
         boostBar.GetComponent<SpriteRenderer>().enabled = true;
         boostLine.GetComponent<SpriteRenderer>().enabled = true;
     }
