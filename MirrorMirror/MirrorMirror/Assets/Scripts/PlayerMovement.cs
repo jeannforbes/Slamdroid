@@ -30,18 +30,37 @@ public class PlayerMovement : MonoBehaviour {
 			canvas.transform.GetChild (1).GetComponent<UnityEngine.UI.Text> ().text =  ""+score;
 		}
 
-		//handle keyboard input
+		//Jumping from right to left
 		if ((Input.GetKeyDown (KeyCode.A) || Input.GetKeyDown (KeyCode.LeftArrow)) 
 			&& (moveState == MoveState.wallRight || moveState == MoveState.start)) {
 			rbody.gravityScale = 0f;
 			rbody.AddForce (Vector2.up * jumpStrength);
 			moveState = MoveState.jumpLeft;
-		} else if ((Input.GetKeyDown (KeyCode.D) || Input.GetKeyDown (KeyCode.RightArrow)) 
+		}
+        //Jumping from left to right
+        else if ((Input.GetKeyDown (KeyCode.D) || Input.GetKeyDown (KeyCode.RightArrow)) 
 			&& (moveState == MoveState.wallLeft || moveState == MoveState.start)) {
 			rbody.gravityScale = 0f;
 			rbody.AddForce (Vector2.up * jumpStrength);
 			moveState = MoveState.jumpRight;
-		} else if ( Input.anyKeyDown && moveState == MoveState.dead) {
+		}
+        //Jumping from right to right
+        else if ((Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.RightArrow))
+            && (moveState == MoveState.wallRight))
+        {
+            rbody.gravityScale = 0f;
+            rbody.AddForce((new Vector2(-1f, 1f)) * jumpStrength);
+            moveState = MoveState.jumpRight;
+        }
+        //Jumping from left to left
+        else if ((Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.LeftArrow))
+            && (moveState == MoveState.wallLeft)){
+            rbody.gravityScale = 0f;
+            rbody.AddForce( ( new Vector2(1f,1f) ) * jumpStrength);
+            moveState = MoveState.jumpLeft;
+        }
+        //Player is dead
+        else if ( Input.anyKeyDown && moveState == MoveState.dead) {
 			Reset ();
 		}
 
