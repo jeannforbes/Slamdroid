@@ -86,12 +86,15 @@ public class StateManager : MonoBehaviour {
         };
 
         instructionString = "Jump up the shaft and avoid obstacles.\n\n";
-
-        instructionString += "Press the left arrow to jump to the left wall.\nPress the right arrow to jump to the right wall.\n";
+#if UNITY_STANDALONE || UNITY_WEBPLAYER || UNITY_WEBGL
+        instructionString += "Press the A or left keys to jump to the left wall.\nPress the D or right keys to jump to the right wall.\n";
+#elif UNITY_IOS || UNITY_ANDROID || UNITY_WP8 || UNITY_IPHONE
+        instructionString += "Tap the left side of the screen to jump to the left wall.\nTap the right side of the screen to jump to the right wall.\n";
+#endif
     }
-	
-	// Update is called once per frame
-	void Update () {
+
+    // Update is called once per frame
+    void Update () {
         switch (state)
         {
            /* case GameState.MainMenu:

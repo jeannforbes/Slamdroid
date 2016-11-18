@@ -2,6 +2,7 @@
 using System.Collections;
 
 public enum MoveState{ wallLeft, wallRight, jumpLeft, jumpRight, start, dead };
+public enum Direction { left,right}
 
 [RequireComponent (typeof (Rigidbody2D))]
 [RequireComponent (typeof (CircleCollider2D))]
@@ -15,6 +16,8 @@ public class PlayerMovement : MonoBehaviour {
 
 	private Rigidbody2D rbody;
 	private Canvas canvas;
+
+    private Vector2 touchPoint;
 
 	// Use this for initialization
 	void Start () {
@@ -31,42 +34,60 @@ public class PlayerMovement : MonoBehaviour {
 			canvas.transform.GetChild (1).GetComponent<UnityEngine.UI.Text> ().text =  ""+score;
 		}
 
-		//Jumping from right to left
-		if ((Input.GetKeyDown (KeyCode.A) || Input.GetKeyDown (KeyCode.LeftArrow)) 
-			&& (moveState == MoveState.wallRight || moveState == MoveState.start)) {
-			rbody.gravityScale = 0f;
-			rbody.AddForce (Vector2.up * jumpStrength);
-			moveState = MoveState.jumpLeft;
+#if UNITY_STANDALONE || UNITY_WEBPLAYER || UNITY_WEBGL
+        //Desktop controls
+
+        //Left jump
+        if (Input.GetKeyDown (KeyCode.A) || Input.GetKeyDown (KeyCode.LeftArrow)) {
+            Jump(Direction.left);
 		}
-        //Jumping from left to right
-        else if ((Input.GetKeyDown (KeyCode.D) || Input.GetKeyDown (KeyCode.RightArrow)) 
-			&& (moveState == MoveState.wallLeft || moveState == MoveState.start)) {
-			rbody.gravityScale = 0f;
-			rbody.AddForce (Vector2.up * jumpStrength);
-			moveState = MoveState.jumpRight;
+        //Right jump
+        else if (Input.GetKeyDown (KeyCode.D) || Input.GetKeyDown (KeyCode.RightArrow)) {
+            Jump(Direction.right);
 		}
-        //Jumping from right to right
-        else if ((Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.RightArrow))
-            && (moveState == MoveState.wallRight))
-        {
-            rbody.gravityScale = 0f;
-            rbody.AddForce((new Vector2(-1f, 1f)) * jumpStrength);
-            moveState = MoveState.jumpRight;
-        }
-        //Jumping from left to left
-        else if ((Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.LeftArrow))
-            && (moveState == MoveState.wallLeft)){
-            rbody.gravityScale = 0f;
-            rbody.AddForce( ( new Vector2(1f,1f) ) * jumpStrength);
-            moveState = MoveState.jumpLeft;
-        }
         //Player is dead
         else if ( Input.anyKeyDown && moveState == MoveState.dead) {
 			Reset ();
 		}
+#elif UNITY_IOS || UNITY_ANDROID || UNITY_WP8 || UNITY_IPHONE
+        //Mobile controls
+        if (Input.touchCount > 0)
+        {
+            Touch nextTouch = Input.touches[0];
+            int i = 1;
+            //Loops through the list of touches for the first touch that began this frame.
+            while(i < Input.touchCount && nextTouch.phase != TouchPhase.Began)
+            {
+                nextTouch = Input.touches[i];
+                i++;
+            }
 
-		//handle current movement state
-		switch (moveState) {
+            //If a touch began this turn check controls.
+            if(nextTouch.phase == TouchPhase.Began)
+            {
+                touchPoint = nextTouch.position;
+
+                //Player is dead
+                if (moveState == MoveState.dead)
+                {
+                    Reset();
+                }
+                //Left jump
+                else if (touchPoint.x < 0)
+                {
+                    Jump(Direction.left);
+                }
+                //Right jump
+                else if (touchPoint.x > 0)
+                {
+                    Jump(Direction.right);
+                }
+            }
+        }
+#endif
+
+        //handle current movement state
+        switch (moveState) {
 		case MoveState.jumpLeft:
 			rbody.AddForce( new Vector2(-speed, 0) );
 			break;
@@ -112,4 +133,46 @@ public class PlayerMovement : MonoBehaviour {
 		rbody.position = Vector2.zero;
 		moveState = MoveState.start;
 	}
+
+    //Method takes the direction the player wants to move and executes the movement.
+    //If the player is moving to the other wall they cross the intemediate space, otherwise they jump upwards in space.
+    void Jump(Direction direction)
+    {
+        //moving to the left
+        if (direction == Direction.left)
+        {
+            //Jumping from right to left
+            if (moveState == MoveState.wallRight || moveState == MoveState.start)
+            {
+                rbody.gravityScale = 0f;
+                rbody.AddForce(Vector2.up * jumpStrength);
+                moveState = MoveState.jumpLeft;
+            }
+            //Jumping from left to left
+            else if (moveState == MoveState.wallLeft)
+            {
+                rbody.gravityScale = 0f;
+                rbody.AddForce((new Vector2(1f, 1f)) * jumpStrength);
+                moveState = MoveState.jumpLeft;
+            }
+        }
+        //moving to the right
+        else if (direction == Direction.right)
+        {
+            //Jumping from right to right
+            if (moveState == MoveState.wallRight)
+            {
+                rbody.gravityScale = 0f;
+                rbody.AddForce((new Vector2(-1f, 1f)) * jumpStrength);
+                moveState = MoveState.jumpRight;
+            }
+            //Jumping from left to right
+            else if (moveState == MoveState.wallLeft || moveState == MoveState.start)
+            {
+                rbody.gravityScale = 0f;
+                rbody.AddForce(Vector2.up * jumpStrength);
+                moveState = MoveState.jumpRight;
+            }
+        }
+    }
 }
