@@ -11,6 +11,7 @@ public class PlayerMovement : MonoBehaviour {
 	public float jumpStrength = 1000f;
 	public MoveState moveState = MoveState.start;
 	public int score = 0;
+    public int money = 0;
 
 	private Rigidbody2D rbody;
 	private Canvas canvas;
