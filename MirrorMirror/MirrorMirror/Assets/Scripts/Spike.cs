@@ -3,30 +3,37 @@ using System.Collections;
 
 [RequireComponent (typeof (Rigidbody2D))]
 [RequireComponent (typeof (CircleCollider2D))]
-public class Spike : MonoBehaviour {
+public class Spike : Obstacle {
 
-	private GameObject player;
-	private PlayerMovement playerScript;
-	private Rigidbody2D playerBody;
+    public Spike() : base()
+    {
+        
+    }
 
 	// Use this for initialization
-	void Start () {
-		player = GameObject.FindWithTag ("Player");
-		playerScript = player.GetComponent<PlayerMovement> ();
-		playerBody = player.GetComponent<Rigidbody2D> ();
+	void Start (){
+        //print("Spike start");
+        this.Init();
 	}
 	
 	// Update is called once per frame
 	void Update () {
-	
+        this.Move();
 	}
 
-	void OnTriggerEnter2D(Collider2D other){
-		if (other.gameObject == player && playerScript.moveState != MoveState.dead) {
-			playerScript.moveState = MoveState.dead;
-			playerBody.velocity = Vector2.zero;
-			playerBody.gravityScale = 3f;
-			playerBody.AddForce( Vector2.up * 700f );
-		}
-	}
+    void OnTriggerEnter2D(Collider2D other)
+    {
+        this.Collision(other);
+    }
+
+    protected override void CollisionResponse()
+    {
+        GameObject.Destroy(this.gameObject);
+    }
+
+    /*public override void Collision(Collider2D other)
+    {
+        print("Spike collision!");
+        base.Collision(other);
+    }*/
 }

@@ -36,7 +36,6 @@ public class StateManager : MonoBehaviour {
     private GameState lastState;
 
     //GUI
-    private const int numInstructionLines = 3;
     private const int numUpgrades = 0;
     private const int maxButtons = 3;
 
@@ -50,6 +49,14 @@ public class StateManager : MonoBehaviour {
     private Rect instructionsRect;
     private Rect instructionButton;
     private Rect cansRect;
+
+#if UNITY_STANDALONE || UNITY_WEBPLAYER || UNITY_WEBGL
+    private const int numInstructionLines = 3;
+#elif UNITY_IOS || UNITY_ANDROID || UNITY_WP8 || UNITY_IPHONE
+    private const int numInstructionLines = 5;
+#else
+    private const int numInstructionLines = 1;
+#endif
 
     private string instructionString;
 
