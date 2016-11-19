@@ -126,6 +126,19 @@ public class PlayerMovement : MonoBehaviour {
 		Debug.Log (moveState);
 	}
 
+	void OnTriggerStay2D(Collider2D other){
+		switch (moveState) {
+		case MoveState.wallLeft:
+			rbody.position = new Vector2(-4f, rbody.position.y);
+			break;
+		case MoveState.wallRight:
+			rbody.position = new Vector2(4f, rbody.position.y);
+			break;
+		default:
+			break;
+		}
+	}
+
 	void Reset(){
 		canvas.GetComponentInChildren<UnityEngine.UI.Text>().enabled = false;
 		GameObject camera = GameObject.FindWithTag ("MainCamera");
