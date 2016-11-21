@@ -5,7 +5,7 @@ public enum MoveState{ wallLeft, wallRight, jumpLeft, jumpRight, start, dead };
 public enum Direction { left,right}
 
 [RequireComponent (typeof (Rigidbody2D))]
-[RequireComponent (typeof (CircleCollider2D))]
+[RequireComponent (typeof (BoxCollider2D))]
 public class PlayerMovement : MonoBehaviour {
 
 	public float speed = 1000f;
@@ -114,11 +114,13 @@ public class PlayerMovement : MonoBehaviour {
 			rbody.velocity = Vector2.zero;
 			rbody.gravityScale = 1f;
 			moveState = MoveState.wallLeft;
+			if(rbody.transform.localScale.x > 0) rbody.transform.localScale = new Vector3(-rbody.transform.localScale.x, rbody.transform.localScale.y, rbody.transform.localScale.z);
 			break;
 		case MoveState.jumpRight:
 			rbody.velocity = Vector2.zero;
 			rbody.gravityScale = 1f;
 			moveState = MoveState.wallRight;
+			if(rbody.transform.localScale.x < 0) rbody.transform.localScale = new Vector3(-rbody.transform.localScale.x, rbody.transform.localScale.y, rbody.transform.localScale.z);
 			break;
 		default:
 			break;

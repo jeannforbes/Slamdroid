@@ -52,7 +52,8 @@ public class Obstacle : MonoBehaviour
             playerScript.moveState = MoveState.dead;
             playerBody.velocity = Vector2.zero;
             playerBody.gravityScale = 3f;
-            playerBody.AddForce(Vector2.up * 700f);
+			playerBody.AddForce( Vector2.up * 900f);
+			playerBody.angularVelocity = 700f;
             this.CollisionResponse();
         }
     }
@@ -60,7 +61,7 @@ public class Obstacle : MonoBehaviour
     //Determines what happens to the Obstacle after it is collided with.
     protected virtual void CollisionResponse()
     {
-        //GameObject.Destroy(this.gameObject);
+
     }
 
     //Moves the obstacle

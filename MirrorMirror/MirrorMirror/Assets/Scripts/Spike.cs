@@ -28,12 +28,6 @@ public class Spike : Obstacle {
 
     protected override void CollisionResponse()
     {
-        GameObject.Destroy(this.gameObject);
-    }
 
-    /*public override void Collision(Collider2D other)
-    {
-        print("Spike collision!");
-        base.Collision(other);
-    }*/
+    }
 }
