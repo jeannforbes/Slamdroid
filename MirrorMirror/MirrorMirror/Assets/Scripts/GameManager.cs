@@ -10,7 +10,7 @@ public class GameManager : MonoBehaviour {
 	private GameObject player;
 	private GameObject[] walls;
 
-	private float currentHeight;
+	public float currentHeight;
 
 	// Use this for initialization
 	void Start () {
@@ -56,9 +56,9 @@ public class GameManager : MonoBehaviour {
 	void GenerateSpike(){
 		GameObject spike;
 		spike = Instantiate (spikePrefab);
-		spike.transform.position = new Vector2(-4f, player.transform.position.y + 20f);
+		spike.transform.position = new Vector2(-4f, player.transform.position.y + 10f + Random.Range (0,5));
 		spike = Instantiate (spikePrefab);
-		spike.transform.position = new Vector2(4f, player.transform.position.y + 30f);
+		spike.transform.position = new Vector2(4f, player.transform.position.y + 20f + Random.Range (0,5));
 	}
 
 	/// <summary>

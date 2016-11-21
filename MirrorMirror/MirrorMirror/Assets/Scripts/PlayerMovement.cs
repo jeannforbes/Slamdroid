@@ -16,6 +16,8 @@ public class PlayerMovement : MonoBehaviour {
 
 	private Rigidbody2D rbody;
 	private Canvas canvas;
+	private Camera camera;
+	private GameObject gameManager;
 
     private Vector2 touchPoint;
 
@@ -23,6 +25,8 @@ public class PlayerMovement : MonoBehaviour {
 	void Start () {
 		rbody = GetComponent<Rigidbody2D> ();
 		canvas = FindObjectOfType<Canvas> ();
+		camera = FindObjectOfType<Camera> ();
+		gameManager = GameObject.FindGameObjectWithTag ("GameManager");
 	}
 	
 	// Update is called once per frame
@@ -125,7 +129,6 @@ public class PlayerMovement : MonoBehaviour {
 		default:
 			break;
 		}
-		Debug.Log (moveState);
 	}
 
 	void OnTriggerStay2D(Collider2D other){
@@ -143,9 +146,18 @@ public class PlayerMovement : MonoBehaviour {
 
 	void Reset(){
 		canvas.GetComponentInChildren<UnityEngine.UI.Text>().enabled = false;
-		GameObject camera = GameObject.FindWithTag ("MainCamera");
 		camera.transform.position = new Vector3 (0, 0, camera.transform.position.z);
 		rbody.position = Vector2.zero;
+		rbody.velocity = Vector2.zero;
+		rbody.rotation = 0f;
+		rbody.angularVelocity = 0f;
+
+		gameManager.GetComponent<GameManager> ().currentHeight = 0f;
+		GameObject[] obstacles = GameObject.FindGameObjectsWithTag ("Obstacle");
+		for (int i=0; i<obstacles.Length; i++)
+			Destroy (obstacles [i]);
+
+
 		moveState = MoveState.start;
 	}
 
