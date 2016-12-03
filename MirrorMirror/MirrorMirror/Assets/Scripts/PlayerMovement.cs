@@ -16,7 +16,7 @@ public class PlayerMovement : MonoBehaviour {
 	public Sprite wallSprite;
 	public Sprite jumpSprite;
 
-	private Rigidbody2D rbody;
+    private Rigidbody2D rbody;
 	private Canvas canvas;
 	private Camera camera;
 	private GameObject gameManager;

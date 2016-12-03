@@ -36,12 +36,18 @@ public class StateManager : MonoBehaviour {
     private GameState lastState;
 
     //GUI
-    private const int numUpgrades = 0;
-    private const int maxButtons = 3;
+    public GUIStyle menuStyle;
+    public GUIStyle titleStyle;
+    public GUIStyle textStyle;
+    public GUIStyle buttonStyle;
+    
+    private int numUpgrades = 0; //Number of upgrades available.
+    private int maxButtons = 3; // The maximum number of button slots available in the game menus.
 
-    private const float lineHeight = 20f;
-    private const float menuWidth = 300f;
-    private const float padding = 5f;
+    public float lineHeight = 25f;// The height of a single line of text used to calculate line spacing.
+    public float menuWidthPercent = 0.35f;// How wide the menu is as a percentage of the screen width/
+    public float padding = 5f;
+    private float menuWidth;
 
     private Rect menuRect;
     private Rect labelRect;
@@ -51,9 +57,9 @@ public class StateManager : MonoBehaviour {
     private Rect cansRect;
 
 #if UNITY_STANDALONE || UNITY_WEBPLAYER || UNITY_WEBGL
-    private const int numInstructionLines = 3;
+    private const int numInstructionLines = 6;
 #elif UNITY_IOS || UNITY_ANDROID || UNITY_WP8 || UNITY_IPHONE
-    private const int numInstructionLines = 5;
+    private const int numInstructionLines = 8;
 #else
     private const int numInstructionLines = 1;
 #endif
@@ -71,6 +77,9 @@ public class StateManager : MonoBehaviour {
     void Start () {
         player = GameObject.FindGameObjectWithTag("Player");
         playerScript = player.GetComponent<PlayerMovement>();
+
+        //Calculates the menu width
+        menuWidth = Screen.width * menuWidthPercent;
 
         changeState(GameState.MainMenu);
         menuRect = new Rect(0.0f, 0.0f, menuWidth, Screen.height);
@@ -131,50 +140,50 @@ public class StateManager : MonoBehaviour {
         switch (state)
         {
             case GameState.MainMenu:
-                GUI.Box(menuRect, "");
-                GUI.Label(labelRect, "Slamdroid");
-                if(GUI.Button(buttonRects[0],"Play Game")){
+                GUI.Box(menuRect, "",menuStyle);
+                GUI.Label(labelRect, "Slamdroid", titleStyle);
+                if(GUI.Button(buttonRects[0],"Play Game",buttonStyle)){
                     changeState(GameState.Play);
-                } else if (GUI.Button(buttonRects[1], "Instructions"))
+                } else if (GUI.Button(buttonRects[1], "Instructions", buttonStyle))
                 {
                     changeState(GameState.Instructions);
                 }
-                else if (GUI.Button(buttonRects[2], "Upgrades"))
+                else if (GUI.Button(buttonRects[2], "Upgrades", buttonStyle))
                 {
                     changeState(GameState.Upgrade);
                 }
                 break;
             case GameState.Pause:
-                GUI.Box(menuRect, "");
-                GUI.Label(labelRect, "The game is paused...");
-                if (GUI.Button(buttonRects[0], "Main Menu"))
+                GUI.Box(menuRect, "", menuStyle);
+                GUI.Label(labelRect, "The game is paused...", titleStyle);
+                if (GUI.Button(buttonRects[0], "Main Menu", buttonStyle))
                 {
                     changeState(GameState.MainMenu);
-                } else if (GUI.Button(buttonRects[1], "Instructions"))
+                } else if (GUI.Button(buttonRects[1], "Instructions", buttonStyle))
                 {
                     changeState(GameState.Instructions);
                 }
-                else if (GUI.Button(buttonRects[2], "Upgrades"))
+                else if (GUI.Button(buttonRects[2], "Upgrades", buttonStyle))
                 {
                     changeState(GameState.Upgrade);
                 }
                 break;
             case GameState.Instructions:
-                GUI.Box(menuRect, "");
-                GUI.Label(instructionsRect, instructionString);
-                if (GUI.Button(instructionButton, "Back"))
+                GUI.Box(menuRect, "", menuStyle);
+                GUI.Label(instructionsRect, instructionString, textStyle);
+                if (GUI.Button(instructionButton, "Back", buttonStyle))
                 {
                     changeState(lastState);
                 }
                 break;
             case GameState.Upgrade:
-                GUI.Box(menuRect, "");
-                GUI.Label(labelRect, "Upgrades:");
+                GUI.Box(menuRect, "", menuStyle);
+                GUI.Label(labelRect, "Upgrades:", titleStyle);
                 for(int i = 0; i < upgrades.Length; i++)
                 {
                     if (upgrades[i].maxUpgrades != 0 && upgrades[i].maxUpgrades <= upgrades[i].numUpgrades)
                     {
-                        GUI.Label(buttonRects[i], (upgrades[i].name + " (" + upgrades[i].numUpgrades + "," + upgrades[i].maxUpgrades + ") - N/A"));
+                        GUI.Label(buttonRects[i], (upgrades[i].name + " (" + upgrades[i].numUpgrades + "," + upgrades[i].maxUpgrades + ") - N/A"), textStyle);
                     }
                     else {
                         totalCost = upgrades[i].baseCost + (upgrades[i].numUpgrades * upgrades[i].costIncrement);
@@ -182,11 +191,11 @@ public class StateManager : MonoBehaviour {
                         if (playerScript.money < totalCost)
                         {
 
-                            GUI.Label(buttonRects[i], upgradeStr);
+                            GUI.Label(buttonRects[i], upgradeStr, textStyle);
                         }
                         else
                         {
-                            if (GUI.Button(buttonRects[i], upgradeStr))
+                            if (GUI.Button(buttonRects[i], upgradeStr,buttonStyle))
                             {
                                 playerScript.money -= totalCost;
                                 upgrades[i].numUpgrades ++;
@@ -196,7 +205,7 @@ public class StateManager : MonoBehaviour {
                     }
                 }
 
-                if (GUI.Button(buttonRects[upgrades.Length], "Back"))
+                if (GUI.Button(buttonRects[upgrades.Length], "Back", buttonStyle))
                 {
                     changeState(lastState);
                 }
