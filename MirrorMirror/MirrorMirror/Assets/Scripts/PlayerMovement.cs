@@ -52,7 +52,7 @@ public class PlayerMovement : MonoBehaviour {
             Jump(Direction.right);
 		}
         //Player is dead
-        else if ( Input.anyKeyDown && moveState == MoveState.dead) {
+        if ( Input.anyKeyDown && moveState == MoveState.dead) {
 			Reset ();
 		}
 #elif UNITY_IOS || UNITY_ANDROID || UNITY_WP8 || UNITY_IPHONE
