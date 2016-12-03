@@ -13,6 +13,8 @@ public class PlayerMovement : MonoBehaviour {
 	public MoveState moveState = MoveState.start;
 	public int score = 0;
     public int money = 0;
+	public Sprite wallSprite;
+	public Sprite jumpSprite;
 
 	private Rigidbody2D rbody;
 	private Canvas canvas;
@@ -118,13 +120,19 @@ public class PlayerMovement : MonoBehaviour {
 			rbody.velocity = Vector2.zero;
 			rbody.gravityScale = 1f;
 			moveState = MoveState.wallLeft;
-			if(rbody.transform.localScale.x > 0) rbody.transform.localScale = new Vector3(-rbody.transform.localScale.x, rbody.transform.localScale.y, rbody.transform.localScale.z);
+			if(rbody.transform.localScale.x > 0){
+				rbody.GetComponent<SpriteRenderer>().sprite = wallSprite;
+				rbody.transform.localScale = new Vector3(-rbody.transform.localScale.x, rbody.transform.localScale.y, rbody.transform.localScale.z);
+			}
 			break;
 		case MoveState.jumpRight:
 			rbody.velocity = Vector2.zero;
 			rbody.gravityScale = 1f;
 			moveState = MoveState.wallRight;
-			if(rbody.transform.localScale.x < 0) rbody.transform.localScale = new Vector3(-rbody.transform.localScale.x, rbody.transform.localScale.y, rbody.transform.localScale.z);
+			if(rbody.transform.localScale.x < 0){
+				rbody.GetComponent<SpriteRenderer>().sprite = wallSprite;
+				rbody.transform.localScale = new Vector3(-rbody.transform.localScale.x, rbody.transform.localScale.y, rbody.transform.localScale.z);
+			}
 			break;
 		default:
 			break;
@@ -134,10 +142,12 @@ public class PlayerMovement : MonoBehaviour {
 	void OnTriggerStay2D(Collider2D other){
 		switch (moveState) {
 		case MoveState.wallLeft:
-			rbody.position = new Vector2(-4f, rbody.position.y);
+			rbody.GetComponent<SpriteRenderer>().sprite = wallSprite;
+			//rbody.position = new Vector2(-4f, rbody.position.y);
 			break;
 		case MoveState.wallRight:
-			rbody.position = new Vector2(4f, rbody.position.y);
+			rbody.GetComponent<SpriteRenderer>().sprite = wallSprite;
+			//rbody.position = new Vector2(4f, rbody.position.y);
 			break;
 		default:
 			break;
@@ -168,24 +178,26 @@ public class PlayerMovement : MonoBehaviour {
         //moving to the left
         if (direction == Direction.left)
         {
+			rbody.GetComponent<SpriteRenderer>().sprite = jumpSprite;
             //Jumping from right to left
             if (moveState == MoveState.wallRight || moveState == MoveState.start)
             {
                 rbody.gravityScale = 0f;
-                rbody.AddForce(Vector2.up * jumpStrength);
+				rbody.AddForce((new Vector2(1f * speed, 1f * jumpStrength)));
                 moveState = MoveState.jumpLeft;
             }
             //Jumping from left to left
             else if (moveState == MoveState.wallLeft)
             {
                 rbody.gravityScale = 0f;
-                rbody.AddForce((new Vector2(1f, 1f)) * jumpStrength);
+				rbody.AddForce((new Vector2(1f * speed, 1f * jumpStrength)));
                 moveState = MoveState.jumpLeft;
             }
         }
         //moving to the right
         else if (direction == Direction.right)
         {
+			rbody.GetComponent<SpriteRenderer>().sprite = jumpSprite;
             //Jumping from right to right
             if (moveState == MoveState.wallRight)
             {
