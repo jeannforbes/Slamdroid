@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public enum MoveState{ wallLeft, wallRight, jumpLeft, jumpRight, start, dead };
+public enum MoveState{ wallLeft, wallRight, jumpLeft, jumpRight, start, dead, tutorialPopup };
 public enum Direction { left,right}
 
 [RequireComponent (typeof (Rigidbody2D))]
@@ -10,7 +10,7 @@ public class PlayerMovement : MonoBehaviour {
 
 	public float speed = 1000f;
 	public float jumpStrength = 1000f;
-	public MoveState moveState = MoveState.start;
+	public MoveState moveState = MoveState.tutorialPopup;
 	public int score = 0;
     public int money = 0;
 	public Sprite wallSprite;
@@ -23,6 +23,9 @@ public class PlayerMovement : MonoBehaviour {
 
     private Vector2 touchPoint;
 
+    //lets the program know when the program is tansitioning
+    //public bool transitionFrame = false;
+
 	// Use this for initialization
 	void Start () {
 		rbody = GetComponent<Rigidbody2D> ();
@@ -33,6 +36,7 @@ public class PlayerMovement : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+        //print(moveState);
 
 		//Update score
 		if (score < rbody.position.y) {
@@ -55,6 +59,10 @@ public class PlayerMovement : MonoBehaviour {
         if ( Input.anyKeyDown && moveState == MoveState.dead) {
 			Reset ();
 		}
+        if(Input.anyKeyDown && moveState == MoveState.tutorialPopup)
+        {
+            moveState = MoveState.start;
+        }
 #elif UNITY_IOS || UNITY_ANDROID || UNITY_WP8 || UNITY_IPHONE
         //Mobile controls
         if (Input.touchCount > 0)
@@ -78,6 +86,11 @@ public class PlayerMovement : MonoBehaviour {
                 {
                     Reset();
                 }
+                if(Input.anyKeyDown && moveState == MoveState.tutorialPopup)
+                {
+                    moveState = MoveState.start;
+                }
+            `   
                 //Left jump
                 else if (touchPoint.x < 0)
                 {
@@ -91,7 +104,6 @@ public class PlayerMovement : MonoBehaviour {
             }
         }
 #endif
-
         //handle current movement state
         switch (moveState) {
 		case MoveState.jumpLeft:
@@ -112,6 +124,7 @@ public class PlayerMovement : MonoBehaviour {
 		default:
 			break;
 		}
+        //transitionFrame = false;
 	}
 
 	void OnTriggerEnter2D(Collider2D other){
@@ -167,8 +180,7 @@ public class PlayerMovement : MonoBehaviour {
 		for (int i=0; i<obstacles.Length; i++)
 			Destroy (obstacles [i]);
 
-
-		moveState = MoveState.start;
+        moveState = MoveState.start;
 	}
 
     //Method takes the direction the player wants to move and executes the movement.

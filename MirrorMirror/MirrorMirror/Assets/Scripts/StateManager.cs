@@ -40,13 +40,19 @@ public class StateManager : MonoBehaviour {
     public GUIStyle titleStyle;
     public GUIStyle textStyle;
     public GUIStyle buttonStyle;
+
+    public GUIStyle leftArrow;
+    public GUIStyle rightArrow;
     
-    private int numUpgrades = 0; //Number of upgrades available.
-    private int maxButtons = 3; // The maximum number of button slots available in the game menus.
 
     public float lineHeight = 25f;// The height of a single line of text used to calculate line spacing.
-    public float menuWidthPercent = 0.35f;// How wide the menu is as a percentage of the screen width/
-    public float padding = 5f;
+    public float menuWidthPercent = 0.35f;// How wide the menu is as a percentage of the screen width
+    public float keyImageWidth = 50f;
+    public float keyImageHeight = 50f;
+    public float popupWidth = 250f;
+    public float popupHeight = 100f;
+    public float popupHeightOffset = 100f;
+    public float padding = 5f;//padding between the menu rect and sub-elements
     private float menuWidth;
 
     private Rect menuRect;
@@ -54,17 +60,28 @@ public class StateManager : MonoBehaviour {
     private Rect[] buttonRects;
     private Rect instructionsRect;
     private Rect instructionButton;
+    private Rect popupRect;
+    private Rect lArrowRect;
+    private Rect rArrowRect;
+    private Rect infoRect;
     private Rect cansRect;
 
+    public int numUpgrades = 0; //Number of upgrades available.
+    public int maxButtons = 3; // The maximum number of button slots available in the game menus.
+
 #if UNITY_STANDALONE || UNITY_WEBPLAYER || UNITY_WEBGL
-    private const int numInstructionLines = 6;
+    private int numInstructionLines = 6;
+    private int numInfoLines = 3;
 #elif UNITY_IOS || UNITY_ANDROID || UNITY_WP8 || UNITY_IPHONE
-    private const int numInstructionLines = 8;
+    private int numInstructionLines = 8;
+    private int numInfoLines = 3;
 #else
-    private const int numInstructionLines = 1;
+    private int numInstructionLines = 1;
+    private int numInfoLines = 1;
 #endif
 
     private string instructionString;
+    private string infoString;
 
     //Upgrades
     private UpgradeChoice[] upgrades;
@@ -80,6 +97,7 @@ public class StateManager : MonoBehaviour {
 
         //Calculates the menu width
         menuWidth = Screen.width * menuWidthPercent;
+        //print(menuWidth);
 
         changeState(GameState.MainMenu);
         menuRect = new Rect(0.0f, 0.0f, menuWidth, Screen.height);
@@ -93,6 +111,11 @@ public class StateManager : MonoBehaviour {
 
         instructionsRect = new Rect(padding, padding, menuRect.width - (2 * padding), numInstructionLines * (padding + lineHeight) - padding);
         instructionButton = new Rect(padding, padding + ((numInstructionLines) * (padding + lineHeight)), menuRect.width - (2 * padding), lineHeight);
+        
+        popupRect = new Rect((Screen.width-popupWidth)/2, (Screen.height-popupHeight)/2-popupHeightOffset, popupWidth, popupHeight);
+        lArrowRect = new Rect((Screen.width - (3*keyImageWidth)) / 2 , (Screen.height - popupHeight) / 2 - popupHeightOffset + padding, keyImageWidth, keyImageHeight);
+        rArrowRect = new Rect((Screen.width + (keyImageWidth)) / 2 , (Screen.height - popupHeight) / 2 - popupHeightOffset + padding, keyImageWidth, keyImageHeight);
+        infoRect = new Rect((Screen.width - popupWidth) / 2 + padding, (Screen.height - popupHeight) / 2 - popupHeightOffset + keyImageHeight + 2 * padding, popupWidth - 2 * padding, numInfoLines * (padding + lineHeight) - padding);
 
         cansRect = new Rect(padding, Screen.height - (padding + lineHeight), menuRect.width - (2 * padding), lineHeight);
 
@@ -104,10 +127,13 @@ public class StateManager : MonoBehaviour {
         instructionString = "Jump up the shaft and avoid obstacles.\n\n";
 #if UNITY_STANDALONE || UNITY_WEBPLAYER || UNITY_WEBGL
         instructionString += "Press the A or left keys to jump to the left wall.\nPress the D or right keys to jump to the right wall.\n";
+        infoString = "Use A and D or arrow keys to jump.\n\nTip: you can jump agienst the wall you are on to gain height. \n";
 #elif UNITY_IOS || UNITY_ANDROID || UNITY_WP8 || UNITY_IPHONE
         instructionString += "Tap the left side of the screen to jump to the left wall.\nTap the right side of the screen to jump to the right wall.\n";
+        infoString = "(Not written)";
 #endif
     }
+
 
     // Update is called once per frame
     void Update () {
@@ -211,15 +237,26 @@ public class StateManager : MonoBehaviour {
                 }
                 break;
         }
+        GUI.EndGroup();
 
         if(state == GameState.Play)
         {
-            GUI.TextArea(cansRect, "Creature cans - " + playerScript.money);
-        }else
-        {
-            GUI.Label(cansRect, "Creature cans:  " + playerScript.money);
+            GUI.TextArea(cansRect, "Creature cans - " + playerScript.money,menuStyle);
+            if (playerScript.moveState == MoveState.tutorialPopup)
+            {
+                //GUI.BeginGroup(popupRect);
+                GUI.Box(popupRect, "", menuStyle);
+                GUI.Box(lArrowRect, "", leftArrow);
+                GUI.Box(rArrowRect, "", rightArrow);
+                GUI.TextArea(infoRect, infoString, textStyle);
+                //GUI.EndGroup();
+            }
         }
-        GUI.EndGroup();
+        else
+        {
+            GUI.Label(cansRect, "Creature cans:  " + playerScript.money,textStyle);
+        }
+        
     }
 
     public void changeState(GameState newState)
@@ -227,6 +264,7 @@ public class StateManager : MonoBehaviour {
         lastState = state;
         if (newState == GameState.Play)
         {
+            //playerScript.transitionFrame = true;
             playerScript.enabled = true;
         }
         else
