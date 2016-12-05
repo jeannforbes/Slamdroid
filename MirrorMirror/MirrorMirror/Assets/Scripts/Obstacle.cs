@@ -6,9 +6,9 @@ using System.Collections;
 public class Obstacle : MonoBehaviour
 {
 
-    private GameObject player;
-    private PlayerMovement playerScript;
-    private Rigidbody2D playerBody;
+    protected GameObject player;
+	protected PlayerMovement playerScript;
+	protected Rigidbody2D playerBody;
 
     public Obstacle()
     {

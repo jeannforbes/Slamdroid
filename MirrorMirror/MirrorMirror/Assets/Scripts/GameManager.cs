@@ -6,15 +6,19 @@ public class GameManager : MonoBehaviour {
 
 	public GameObject spikePrefab;
 	public List<GameObject> fallingPrefabs;
+	public List<GameObject> fgTiles;
+	public List<GameObject> bgTiles;
 
 	private GameObject player;
 	private GameObject[] walls;
 
 	public float currentHeight;
+	public float currentTileHeight;
 
 	// Use this for initialization
 	void Start () {
 		currentHeight = 0f;
+		currentTileHeight = -10f;
 		player = GameObject.FindGameObjectWithTag ("Player");
 		walls = GameObject.FindGameObjectsWithTag ("Wall");
 	}
@@ -39,6 +43,11 @@ public class GameManager : MonoBehaviour {
 	/// Generates the level.
 	/// </summary>
 	void GenerateLevel(){
+		if (player.transform.position.y + 20f > currentTileHeight) {
+			currentTileHeight += 5;
+			GenerateWallTiles ();
+			GenerateBGTiles ();
+		}
 		if (player.transform.position.y - 20f > currentHeight) {
 			GenerateSpike ();
 
@@ -49,6 +58,23 @@ public class GameManager : MonoBehaviour {
 			currentHeight = player.transform.position.y;
 		}
 	}
+	void GenerateWallTiles(){
+		GameObject leftTile, rightTile;
+		leftTile = Instantiate (fgTiles [(int)Random.Range (0f, fgTiles.Count)]);
+		leftTile.transform.position = new Vector2 (-8f, currentTileHeight);
+
+		rightTile = Instantiate (fgTiles [(int)Random.Range (0f, fgTiles.Count)]);
+		rightTile.transform.position = new Vector2 (8f, currentTileHeight);
+	}
+
+	void GenerateBGTiles(){
+		GameObject bgTile;
+		for (int i=0; i<4; i++) {
+			bgTile = Instantiate (bgTiles [(int)Random.Range (0f, bgTiles.Count)]);
+			bgTile.transform.position = new Vector3 (-8f + i*5, currentTileHeight, 4f);
+		}
+	}
+
 
 	/// <summary>
 	/// Generates randomly placed spikes as the player is climbing.
@@ -56,9 +82,9 @@ public class GameManager : MonoBehaviour {
 	void GenerateSpike(){
 		GameObject spike;
 		spike = Instantiate (spikePrefab);
-		spike.transform.position = new Vector2(-4f, player.transform.position.y + 10f + Random.Range (0,5));
+		spike.transform.position = new Vector2(-5f, player.transform.position.y + 10f + Random.Range (0,5));
 		spike = Instantiate (spikePrefab);
-		spike.transform.position = new Vector2(4f, player.transform.position.y + 20f + Random.Range (0,5));
+		spike.transform.position = new Vector2(5f, player.transform.position.y + 20f + Random.Range (0,5));
 	}
 
 	/// <summary>

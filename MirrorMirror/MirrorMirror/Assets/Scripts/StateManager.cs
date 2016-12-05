@@ -32,7 +32,7 @@ public class StateManager : MonoBehaviour {
     private GameObject player;
     private static PlayerMovement playerScript;
 
-    private GameState state;
+    public GameState state;
     private GameState lastState;
 
     //GUI
@@ -127,7 +127,7 @@ public class StateManager : MonoBehaviour {
         instructionString = "Jump up the shaft and avoid obstacles.\n\n";
 #if UNITY_STANDALONE || UNITY_WEBPLAYER || UNITY_WEBGL
         instructionString += "Press the A or left keys to jump to the left wall.\nPress the D or right keys to jump to the right wall.\n";
-        infoString = "Use A and D or arrow keys to jump.\n\nTip: you can jump agienst the wall you are on to gain height. \n";
+        infoString = "Use A and D or arrow keys to jump.\n\nTip: Jump against the same wall to gain height! \n";
 #elif UNITY_IOS || UNITY_ANDROID || UNITY_WP8 || UNITY_IPHONE
         instructionString += "Tap the left side of the screen to jump to the left wall.\nTap the right side of the screen to jump to the right wall.\n";
         infoString = "(Not written)";

@@ -18,8 +18,6 @@ public class CameraMovement : MonoBehaviour {
 	void Update () {
 		if (playerBody.position.y > this.transform.position.y) {
 			this.transform.position = new Vector3 (this.transform.position.x, playerBody.position.y, this.transform.position.z);
-		} else if (playerBody.position.y+10 < this.transform.position.y) {
-			playerScript.moveState = MoveState.dead;
 		}
 	}
 }

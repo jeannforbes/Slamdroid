@@ -195,14 +195,14 @@ public class PlayerMovement : MonoBehaviour {
             if (moveState == MoveState.wallRight || moveState == MoveState.start)
             {
                 rbody.gravityScale = 0f;
-				rbody.AddForce((new Vector2(1f * speed, 1f * jumpStrength)));
+				rbody.AddForce(Vector2.up * jumpStrength);
                 moveState = MoveState.jumpLeft;
             }
             //Jumping from left to left
             else if (moveState == MoveState.wallLeft)
             {
                 rbody.gravityScale = 0f;
-				rbody.AddForce((new Vector2(1f * speed, 1f * jumpStrength)));
+				rbody.AddForce((new Vector2(1f, 1f)) * jumpStrength);
                 moveState = MoveState.jumpLeft;
             }
         }
