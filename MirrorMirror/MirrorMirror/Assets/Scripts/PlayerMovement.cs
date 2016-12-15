@@ -23,19 +23,60 @@ public class PlayerMovement : MonoBehaviour {
 
     private Vector2 touchPoint;
 
+    // GUI Fields
+    public GUIStyle menuStyle;
+    public GUIStyle textStyle;
+    public GUIStyle leftArrow;
+    public GUIStyle rightArrow;
+
+    public float lineHeight = 25f;// The height of a single line of text used to calculate line spacing.
+    public float keyImageWidth = 50f;
+    public float keyImageHeight = 50f;
+    public float popupWidth = 250f;
+    public float popupHeight = 100f;
+    public float popupHeightOffset = 100f;
+    public float padding = 5f;//padding between the menu rect and sub-elements
+
+    private Rect popupRect;
+    private Rect lArrowRect;
+    private Rect rArrowRect;
+    private Rect infoRect;
+    
+    private string infoString;
+
+#if UNITY_STANDALONE || UNITY_WEBPLAYER || UNITY_WEBGL
+    private int numInfoLines = 3;
+#elif UNITY_IOS || UNITY_ANDROID || UNITY_WP8 || UNITY_IPHONE
+    private int numInfoLines = 3;
+#else
+    private int numInfoLines = 1;
+#endif
+
     //lets the program know when the program is tansitioning
     //public bool transitionFrame = false;
 
-	// Use this for initialization
-	void Start () {
+    // Use this for initialization
+    void Start () {
 		rbody = GetComponent<Rigidbody2D> ();
 		canvas = FindObjectOfType<Canvas> ();
 		camera = FindObjectOfType<Camera> ();
 		gameManager = GameObject.FindGameObjectWithTag ("GameManager");
-	}
-	
-	// Update is called once per frame
-	void Update () {
+
+        //GUI rectangles
+        popupRect = new Rect((Screen.width - popupWidth) / 2, (Screen.height - popupHeight) / 2 - popupHeightOffset, popupWidth, popupHeight);
+        lArrowRect = new Rect((Screen.width - (3 * keyImageWidth)) / 2, (Screen.height - popupHeight) / 2 - popupHeightOffset + padding, keyImageWidth, keyImageHeight);
+        rArrowRect = new Rect((Screen.width + (keyImageWidth)) / 2, (Screen.height - popupHeight) / 2 - popupHeightOffset + padding, keyImageWidth, keyImageHeight);
+        infoRect = new Rect((Screen.width - popupWidth) / 2 + padding, (Screen.height - popupHeight) / 2 - popupHeightOffset + keyImageHeight + 2 * padding, popupWidth - 2 * padding, numInfoLines * (padding + lineHeight) - padding);
+
+#if UNITY_STANDALONE || UNITY_WEBPLAYER || UNITY_WEBGL
+        infoString = "Use A and D or arrow keys to jump.\n\nTip: Jump against the same wall to gain height! \n";
+#elif UNITY_IOS || UNITY_ANDROID || UNITY_WP8 || UNITY_IPHONE
+        infoString = "(Not written)";
+#endif
+    }
+
+    // Update is called once per frame
+    void Update () {
         print(moveState);
 
 		//Update score
@@ -227,6 +268,19 @@ public class PlayerMovement : MonoBehaviour {
                 rbody.AddForce(Vector2.up * jumpStrength);
                 moveState = MoveState.jumpRight;
             }
+        }
+    }
+
+    void OnGUI()
+    {
+        if (moveState == MoveState.tutorialPopup)
+        {
+            //GUI.BeginGroup(popupRect);
+            GUI.Box(popupRect, "", menuStyle);
+            GUI.Box(lArrowRect, "", leftArrow);
+            GUI.Box(rArrowRect, "", rightArrow);
+            GUI.TextArea(infoRect, infoString, textStyle);
+            //GUI.EndGroup();
         }
     }
 }
