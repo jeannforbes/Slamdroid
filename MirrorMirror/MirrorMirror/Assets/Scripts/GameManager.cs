@@ -16,7 +16,7 @@ public class GameManager : MonoBehaviour {
 
     //Height calculations
     public float currentHeight;
-    public float maximumHeight;
+    public float updateHeight;
 	public float currentTileHeight;
     
     // GUI Fields
@@ -78,12 +78,14 @@ public class GameManager : MonoBehaviour {
 #elif UNITY_IOS || UNITY_ANDROID || UNITY_WP8 || UNITY_IPHONE
         infoString = "(Not written)";
 #endif
+        gravityDirection.Normalize();
     }
 
     // Update is called once per frame
     void Update () {
 		MoveWalls ();
 		GenerateLevel ();
+        UpdateGravity();
 	}
 
 	void MoveWalls(){
@@ -108,16 +110,25 @@ public class GameManager : MonoBehaviour {
 			GenerateWallTiles ();
 			GenerateBGTiles ();
 		}
-		if (currentHeight - 20f > maximumHeight) {
+		if (currentHeight - 20f > updateHeight) {
 			GenerateSpike ();
 
 			//Will something fall?
 			if ( Random.Range (0,10) < 5 ) SpawnFallingObject();
 
 			//Set the new current height
-			maximumHeight = currentHeight;
+			updateHeight = currentHeight;
 		}
 	}
+
+    /// <summary>
+    /// 
+    /// </summary>
+    void UpdateGravity()
+    {
+        player.GetComponent<Rigidbody2D>().gravityScale = -1*gravityDirection.y;
+    }
+
 	void GenerateWallTiles(){
 		GameObject leftTile, rightTile;
 		leftTile = Instantiate (fgTiles [(int)Random.Range (0f, fgTiles.Count)]);
@@ -161,7 +172,7 @@ public class GameManager : MonoBehaviour {
     //Runs the GUI for the scene.
     void OnGUI()
     {
-        GUI.TextArea(scoreRect, "Current Height - " + (currentHeight>0?(int)currentHeight:0) +"\nHighest - " + (int)maximumHeight, menuStyle);
+        GUI.TextArea(scoreRect, "Current Height - " + (currentHeight>0?(int)currentHeight:0) +"\nHighest - " + (int)playerScript.score, menuStyle);
         if (playerScript.moveState == MoveState.tutorialPopup)
         {
 
