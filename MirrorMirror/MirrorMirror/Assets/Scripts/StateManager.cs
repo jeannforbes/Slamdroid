@@ -26,7 +26,7 @@ struct UpgradeChoice
 public class StateManager : MonoBehaviour {
     public enum GameState
     {
-        MainMenu,Play,Pause,Instructions,Upgrade
+        /*MainMenu,*/Play,Pause,Instructions/*,Upgrade*/
     }
 
     private GameObject player;
@@ -99,7 +99,7 @@ public class StateManager : MonoBehaviour {
         menuWidth = Screen.width * menuWidthPercent;
         //print(menuWidth);
 
-        changeState(GameState.MainMenu);
+        changeState(GameState.Play);
         menuRect = new Rect(0.0f, 0.0f, menuWidth, Screen.height);
         labelRect = new Rect(padding, padding, menuRect.width-(2*padding), lineHeight);
         buttonRects = new Rect[maxButtons];
@@ -165,7 +165,7 @@ public class StateManager : MonoBehaviour {
         GUI.BeginGroup(menuRect);
         switch (state)
         {
-            case GameState.MainMenu:
+            /*case GameState.MainMenu:
                 GUI.Box(menuRect, "",menuStyle);
                 GUI.Label(labelRect, "Slamdroid", titleStyle);
                 if(GUI.Button(buttonRects[0],"Play Game",buttonStyle)){
@@ -178,21 +178,21 @@ public class StateManager : MonoBehaviour {
                 {
                     changeState(GameState.Upgrade);
                 }
-                break;
+                break;*/
             case GameState.Pause:
                 GUI.Box(menuRect, "", menuStyle);
                 GUI.Label(labelRect, "The game is paused...", titleStyle);
-                if (GUI.Button(buttonRects[0], "Main Menu", buttonStyle))
+               /* if (GUI.Button(buttonRects[0], "Main Menu", buttonStyle))
                 {
                     changeState(GameState.MainMenu);
-                } else if (GUI.Button(buttonRects[1], "Instructions", buttonStyle))
+                } else */if (GUI.Button(buttonRects[0], "Instructions", buttonStyle))
                 {
                     changeState(GameState.Instructions);
                 }
-                else if (GUI.Button(buttonRects[2], "Upgrades", buttonStyle))
+                /*else if (GUI.Button(buttonRects[1], "Upgrades", buttonStyle))
                 {
                     changeState(GameState.Upgrade);
-                }
+                }*/
                 break;
             case GameState.Instructions:
                 GUI.Box(menuRect, "", menuStyle);
@@ -202,7 +202,7 @@ public class StateManager : MonoBehaviour {
                     changeState(lastState);
                 }
                 break;
-            case GameState.Upgrade:
+            /*case GameState.Upgrade:
                 GUI.Box(menuRect, "", menuStyle);
                 GUI.Label(labelRect, "Upgrades:", titleStyle);
                 for(int i = 0; i < upgrades.Length; i++)
@@ -235,13 +235,12 @@ public class StateManager : MonoBehaviour {
                 {
                     changeState(lastState);
                 }
-                break;
+                break;*/
         }
         GUI.EndGroup();
-
         if(state == GameState.Play)
         {
-            GUI.TextArea(cansRect, "Creature cans - " + playerScript.money,menuStyle);
+            //GUI.TextArea(cansRect, "Creature cans - " + playerScript.money,menuStyle);
             if (playerScript.moveState == MoveState.tutorialPopup)
             {
                 //GUI.BeginGroup(popupRect);
@@ -252,11 +251,11 @@ public class StateManager : MonoBehaviour {
                 //GUI.EndGroup();
             }
         }
-        else
+        /*else
         {
             GUI.Label(cansRect, "Creature cans:  " + playerScript.money,textStyle);
         }
-        
+        */
     }
 
     public void changeState(GameState newState)

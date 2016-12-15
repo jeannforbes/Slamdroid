@@ -36,7 +36,7 @@ public class PlayerMovement : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        //print(moveState);
+        print(moveState);
 
 		//Update score
 		if (score < rbody.position.y) {
@@ -47,6 +47,17 @@ public class PlayerMovement : MonoBehaviour {
 #if UNITY_STANDALONE || UNITY_WEBPLAYER || UNITY_WEBGL
         //Desktop controls
 
+
+        //Player is dead
+        if (Input.anyKeyDown && moveState == MoveState.dead)
+        {
+            Reset();
+        }
+        if (Input.anyKeyDown && moveState == MoveState.tutorialPopup)
+        {
+            moveState = MoveState.start;
+        }
+
         //Left jump
         if (Input.GetKeyDown (KeyCode.A) || Input.GetKeyDown (KeyCode.LeftArrow)) {
             Jump(Direction.left);
@@ -55,14 +66,6 @@ public class PlayerMovement : MonoBehaviour {
         else if (Input.GetKeyDown (KeyCode.D) || Input.GetKeyDown (KeyCode.RightArrow)) {
             Jump(Direction.right);
 		}
-        //Player is dead
-        if ( Input.anyKeyDown && moveState == MoveState.dead) {
-			Reset ();
-		}
-        if(Input.anyKeyDown && moveState == MoveState.tutorialPopup)
-        {
-            moveState = MoveState.start;
-        }
 #elif UNITY_IOS || UNITY_ANDROID || UNITY_WP8 || UNITY_IPHONE
         //Mobile controls
         if (Input.touchCount > 0)
