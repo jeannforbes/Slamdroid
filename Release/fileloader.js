@@ -20,8 +20,8 @@ Module.expectedDataFileDownloads++;
     } else {
       throw 'using preloaded data can only be done on a web page or in a web worker';
     }
-    var PACKAGE_NAME = 'Slamdroid.data';
-    var REMOTE_PACKAGE_BASE = 'Slamdroid.data';
+    var PACKAGE_NAME = 'GitHub.data';
+    var REMOTE_PACKAGE_BASE = 'GitHub.data';
     if (typeof Module['locateFilePackage'] === 'function' && !Module['locateFile']) {
       Module['locateFile'] = Module['locateFilePackage'];
       Module.printErr('warning: you defined Module.locateFilePackage, that has been renamed to Module.locateFile (using your locateFilePackage for now)');
@@ -30,8 +30,8 @@ Module.expectedDataFileDownloads++;
                               Module['locateFile'](REMOTE_PACKAGE_BASE) :
                               ((Module['filePackagePrefixURL'] || '') + REMOTE_PACKAGE_BASE);
   
-      var REMOTE_PACKAGE_SIZE = 14812721;
-      var PACKAGE_UUID = '51404573-f3ba-4a76-ac1b-bb20a6b2c186';
+      var REMOTE_PACKAGE_SIZE = 18052341;
+      var PACKAGE_UUID = '1075c55d-f753-4160-ac90-c3ff0924688d';
     
     function fetchRemotePackage(packageName, packageSize, callback, errback) {
       var xhr = new XMLHttpRequest();
@@ -132,12 +132,12 @@ Module['FS_createPath']('/', 'Resources', true, true);
       },
     };
 
-      new DataRequest(0, 29692, 0, 0).open('GET', '/mainData');
-    new DataRequest(29692, 29713, 0, 0).open('GET', '/methods_pointedto_by_uievents.xml');
-    new DataRequest(29713, 10821041, 0, 0).open('GET', '/sharedassets0.assets');
-    new DataRequest(10821041, 12421557, 0, 0).open('GET', '/Il2CppData/Metadata/global-metadata.dat');
-    new DataRequest(12421557, 14308989, 0, 0).open('GET', '/Resources/unity_default_resources');
-    new DataRequest(14308989, 14812721, 0, 0).open('GET', '/Resources/unity_builtin_extra');
+      new DataRequest(0, 36372, 0, 0).open('GET', '/mainData');
+    new DataRequest(36372, 36393, 0, 0).open('GET', '/methods_pointedto_by_uievents.xml');
+    new DataRequest(36393, 14059697, 0, 0).open('GET', '/sharedassets0.assets');
+    new DataRequest(14059697, 15661177, 0, 0).open('GET', '/Il2CppData/Metadata/global-metadata.dat');
+    new DataRequest(15661177, 17548609, 0, 0).open('GET', '/Resources/unity_default_resources');
+    new DataRequest(17548609, 18052341, 0, 0).open('GET', '/Resources/unity_builtin_extra');
 
     function processPackageData(arrayBuffer) {
       Module.finishedDataFileDownloads++;
@@ -153,10 +153,10 @@ Module['FS_createPath']('/', 'Resources', true, true);
           DataRequest.prototype.requests["/Il2CppData/Metadata/global-metadata.dat"].onload();
           DataRequest.prototype.requests["/Resources/unity_default_resources"].onload();
           DataRequest.prototype.requests["/Resources/unity_builtin_extra"].onload();
-          Module['removeRunDependency']('datafile_Slamdroid.data');
+          Module['removeRunDependency']('datafile_GitHub.data');
 
     };
-    Module['addRunDependency']('datafile_Slamdroid.data');
+    Module['addRunDependency']('datafile_GitHub.data');
   
     if (!Module.preloadResults) Module.preloadResults = {};
   
