@@ -37,8 +37,6 @@ public class PlayerMovement : MonoBehaviour {
 
     // Update is called once per frame
     void Update () {
-        print(moveState);
-
 		//Update score
 		if (score < rbody.position.y) {
 			score = (int)rbody.position.y;
@@ -172,6 +170,8 @@ public class PlayerMovement : MonoBehaviour {
 	}
 
 	void Reset(){
+		GameObject.FindGameObjectWithTag("DeathWall").GetComponent<DeathWall>().Reset ();
+
 		canvas.GetComponentInChildren<UnityEngine.UI.Text>().enabled = false;
 		camera.transform.position = new Vector3 (0, 0, camera.transform.position.z);
 		rbody.position = Vector2.zero;
@@ -183,7 +183,7 @@ public class PlayerMovement : MonoBehaviour {
 		GameObject[] obstacles = GameObject.FindGameObjectsWithTag ("Obstacle");
 		for (int i=0; i<obstacles.Length; i++)
 			Destroy (obstacles [i]);
-
+		
         moveState = MoveState.start;
 	}
 

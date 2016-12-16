@@ -110,10 +110,10 @@ public class GameManager : MonoBehaviour {
 			GenerateWallTiles ();
 			GenerateBGTiles ();
 		}
-		if (currentHeight - 20f > updateHeight) {
+		if (currentHeight - Random.Range(17f, 20f) > updateHeight) {
 			GenerateSpike ();
 
-			//Will something fall?
+			//Will a falling spike spawn?
 			if ( Random.Range (0,10) < 5 ) SpawnFallingObject();
 
 			//Set the new current height
@@ -163,7 +163,6 @@ public class GameManager : MonoBehaviour {
 	/// </summary>
 	void SpawnFallingObject(){
 		int randomNum = (int)Random.Range (0, fallingPrefabs.Count - 1);
-		Debug.Log (randomNum);
 		GameObject fallingObject = (GameObject)Instantiate (fallingPrefabs[randomNum]);
 		fallingObject.transform.position = new Vector2 (0f, player.transform.position.y + 20f);
 		fallingObject.GetComponent<Rigidbody2D> ().angularVelocity = 300f;

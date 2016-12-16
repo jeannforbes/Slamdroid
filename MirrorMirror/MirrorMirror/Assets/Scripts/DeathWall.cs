@@ -1,6 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+[RequireComponent (typeof (BoxCollider2D))]
+
 public class DeathWall : MonoBehaviour {
 
 	public float speed = 1f;
@@ -13,6 +15,8 @@ public class DeathWall : MonoBehaviour {
 	private GameObject player;
 	private Vector2 startingPos;
 
+	private bool moving;
+
 	// Use this for initialization
 	void Start () {
 		stateManager = GameObject.FindGameObjectWithTag("GameManager").GetComponent<StateManager> ();
@@ -21,12 +25,19 @@ public class DeathWall : MonoBehaviour {
 		playerBody = player.GetComponent<Rigidbody2D>();
 
 		startingPos = this.transform.position;
+		moving = false;
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		if (player.GetComponent<PlayerMovement> ().moveState == MoveState.dead)
+		if ( Input.anyKeyDown )
+			moving = true;
+		if (!moving)
+			return;
+
+		if (player.GetComponent<PlayerMovement> ().moveState == MoveState.dead) {
 			this.GetComponent<Collider2D> ().enabled = false;
+		}
 
 		if (speed < maxSpeed)
 			speed += 0.001f;
@@ -35,7 +46,7 @@ public class DeathWall : MonoBehaviour {
 		} else if (stateManager.state == StateManager.GameState.Play) {
 			this.transform.Translate (new Vector3 (0f, 0.05f * speed, 0f));
 			if (this.transform.position.y < player.transform.position.y - 15f){
-				this.transform.position = new Vector2(0f, player.transform.position.y - 15f);
+				this.transform.position = new Vector2(0f, player.transform.position.y - 15f) * Time.deltaTime * 10;
 			}
 		}
 	}
@@ -52,7 +63,8 @@ public class DeathWall : MonoBehaviour {
 		
 	}
 
-	void Reset(){
+	public void Reset(){
+		this.moving = false;
 		this.GetComponent<Collider2D> ().enabled = true;
 		this.transform.position = startingPos;
 	}
